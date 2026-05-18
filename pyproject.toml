@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agentix-runtime-basic"
-version = "0.1.1"
+version = "0.1.2"
 description = "Shell + file I/O primitives for Agentix sandboxes"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -42,6 +42,14 @@ files = "agentix.files"
 # hatchling walks the tree and installs files at `agentix/bash/` and
 # `agentix/files/` in the wheel.
 packages = ["src/agentix"]
+
+# Plugin Nix expressions ship as wheel data next to each namespace's
+# Python module. `agentix build` discovers them via
+# `importlib.resources.files('agentix.<short>') / 'default.nix'` and
+# composes them into the bundle image's runtime.
+[tool.hatch.build.targets.wheel.force-include]
+"src/agentix/bash/default.nix" = "agentix/bash/default.nix"
+"src/agentix/files/default.nix" = "agentix/files/default.nix"
 
 [tool.ruff]
 line-length = 120
